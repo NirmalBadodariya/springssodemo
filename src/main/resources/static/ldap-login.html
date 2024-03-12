@@ -1,0 +1,16 @@
+<!-- ldap-login.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>LDAP Login</title>
+</head>
+<body>
+<form action="/perform-login" method="post">
+    <input type="text" name="username" placeholder="Username">
+    <input type="password" name="password" placeholder="Password">
+    <button type="submit">Log in with LDAP</button>
+    <!-- CSRF token should be included in form -->
+    <input type="hidden" name="_csrf" value="${_csrf.token}"/>
+</form>
+</body>
+</html>

@@ -4,6 +4,7 @@ import com.ssowithspring.springssodemo.entities.UserEntity;
 import com.ssowithspring.springssodemo.repos.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserRequest;
 import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserService;
 
@@ -46,4 +47,12 @@ public class UserService implements OAuth2UserService<OidcUserRequest, OidcUser>
 
         return oidcUser;
     }
+
+//    public void saveUserDetails(User ldapUser) {
+//        UserEntity newUser = new UserEntity();
+//        newUser.setName(ldapUser.getUsername());
+//        // Set other attributes from ldapUser to newUser as necessary
+//
+//        userRepository.save(newUser);
+//    }
 }

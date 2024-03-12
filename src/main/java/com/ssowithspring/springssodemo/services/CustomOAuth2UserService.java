@@ -22,7 +22,6 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         String registrationId = userRequest.getClientRegistration().getRegistrationId();
         processOAuth2User(registrationId, oauth2User);
 
-        // You can adjust the authorities as necessary
         return oauth2User;
     }
 

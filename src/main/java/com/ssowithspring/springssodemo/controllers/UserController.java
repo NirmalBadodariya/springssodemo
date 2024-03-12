@@ -1,7 +1,7 @@
 package com.ssowithspring.springssodemo.controllers;
 
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.oauth2.core.oidc.user.OidcUser;
+
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,8 +16,13 @@ public class UserController {
     }
 
     @GetMapping("/post-login-url")
-    public String postLogin(Model model, @AuthenticationPrincipal OAuth2User principal) {
-        model.addAttribute("name", principal.getAttribute("name"));
+    public String postLogin(Model model, @AuthenticationPrincipal OAuth2User principal ) {
+      model.addAttribute("name", principal.getAttribute("name"));
         return "/post-login.html";
+    }
+
+    @GetMapping("/ldap-login")
+    public String ldapLoginPage() {
+        return "/ldap-login.html"; // returns the ldap-login.html Thymeleaf template
     }
 }
