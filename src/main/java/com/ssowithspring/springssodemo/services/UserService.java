@@ -40,7 +40,7 @@ public class UserService implements OAuth2UserService<OidcUserRequest, OidcUser>
             applicationUser.setEmail(email);
         }
         applicationUser.setName(name);
-
+        applicationUser.setProvider("Google");
 
         userRepository.save(applicationUser);
 
@@ -48,11 +48,4 @@ public class UserService implements OAuth2UserService<OidcUserRequest, OidcUser>
         return oidcUser;
     }
 
-//    public void saveUserDetails(User ldapUser) {
-//        UserEntity newUser = new UserEntity();
-//        newUser.setName(ldapUser.getUsername());
-//        // Set other attributes from ldapUser to newUser as necessary
-//
-//        userRepository.save(newUser);
-//    }
 }

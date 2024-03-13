@@ -16,4 +16,4 @@ objectclass: inetOrgPerson
 cn: John Doe
 sn: Doe
 uid: john.doe
-userPassword: {noop}password
+userPassword: password
