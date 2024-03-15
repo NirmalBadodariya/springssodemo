@@ -4,7 +4,6 @@ import com.ssowithspring.springssodemo.entities.UserEntity;
 import com.ssowithspring.springssodemo.repos.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserRequest;
 import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserService;
 
@@ -24,6 +23,11 @@ public class UserService implements OAuth2UserService<OidcUserRequest, OidcUser>
 
     @Override
     public OidcUser loadUser(OidcUserRequest userRequest) throws OAuth2AuthenticationException {
+
+        // Determine the provider
+        String provider = userRequest.getClientRegistration().getRegistrationId();
+
+
         // Delegate to the default implementation for loading the user
         OidcUserService delegate = new OidcUserService();
         OidcUser oidcUser = delegate.loadUser(userRequest);
@@ -33,6 +37,7 @@ public class UserService implements OAuth2UserService<OidcUserRequest, OidcUser>
         String name = oidcUser.getAttribute("name");
         // Additional attributes can be extracted here
 
+
         // Check if user exists, update or create new one
         UserEntity applicationUser = userRepository.findByEmail(email);
         if (applicationUser == null) {
@@ -40,7 +45,13 @@ public class UserService implements OAuth2UserService<OidcUserRequest, OidcUser>
             applicationUser.setEmail(email);
         }
         applicationUser.setName(name);
-        applicationUser.setProvider("Google");
+        if ("google".equals(provider)) {
+            applicationUser.setProvider("Google");
+        } else if ("azure".equals(provider)) {
+            applicationUser.setProvider("Azure");
+            // You may need to adjust the attributes you retrieve for Azure AD users, for example:
+            // name = oidcUser.getAttribute("preferred_username");
+        }
 
         userRepository.save(applicationUser);
 

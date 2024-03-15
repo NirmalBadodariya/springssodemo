@@ -5,12 +5,12 @@
     <title>LDAP Login</title>
 </head>
 <body>
-<form action="/perform-login" method="post">
+<form action="/perform-ldap-login" method="post">
     <input type="text" name="username" placeholder="Username">
     <input type="password" name="password" placeholder="Password">
     <button type="submit">Log in with LDAP</button>
-    <!-- CSRF token should be included in form -->
-    <input type="hidden" name="_csrf" value="${_csrf.token}"/>
+    <!-- CSRF Token, needed if CSRF protection is enabled -->
+    <input type="hidden" name="_csrf" value="${_csrf.token}" />
 </form>
 </body>
 </html>

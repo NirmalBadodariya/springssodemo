@@ -1,10 +1,7 @@
 package com.ssowithspring.springssodemo.controllers;
 
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 
-import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
@@ -22,6 +19,15 @@ public class UserController {
 
     @GetMapping("/ldap-login")
     public String ldapLoginPage() {
-        return "ldap-login"; // returns the ldap-login.html Thymeleaf template
+        return "ldap-login";
+    }
+
+    @GetMapping("/developers")
+    public String devLogin(){
+        return "developers";
+    }
+    @GetMapping("/admins")
+    public String adminLogin(){
+        return "admin";
     }
 }

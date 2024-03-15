@@ -1,19 +1,53 @@
+# Define the domain
 dn: dc=springframework,dc=org
-objectclass: top
-objectclass: domain
+objectClass: top
+objectClass: domain
 dc: springframework
 
+# Define organizational unit for people
 dn: ou=people,dc=springframework,dc=org
-objectclass: top
-objectclass: organizationalUnit
+objectClass: top
+objectClass: organizationalUnit
 ou: people
 
+# Define organizational unit for groups
+dn: ou=groups,dc=springframework,dc=org
+objectClass: top
+objectClass: organizationalUnit
+ou: groups
+
+# User 1: John Doe, a developer
 dn: uid=john.doe,ou=people,dc=springframework,dc=org
-objectclass: top
-objectclass: person
-objectclass: organizationalPerson
-objectclass: inetOrgPerson
+objectClass: top
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
 cn: John Doe
 sn: Doe
 uid: john.doe
 userPassword: password
+
+# User 2: Jane Doe, an admin
+dn: uid=jane.doe,ou=people,dc=springframework,dc=org
+objectClass: top
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+cn: Jane Doe
+sn: Doe
+uid: jane.doe
+userPassword: password
+
+# Group: Developers
+dn: cn=developers,ou=groups,dc=springframework,dc=org
+objectClass: top
+objectClass: groupOfUniqueNames
+cn: developers
+uniqueMember: uid=john.doe,ou=people,dc=springframework,dc=org
+
+# Group: Admins
+dn: cn=admins,ou=groups,dc=springframework,dc=org
+objectClass: top
+objectClass: groupOfUniqueNames
+cn: admins
+uniqueMember: uid=jane.doe,ou=people,dc=springframework,dc=org
