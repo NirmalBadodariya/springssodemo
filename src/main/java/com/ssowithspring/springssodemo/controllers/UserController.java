@@ -12,16 +12,21 @@ public class UserController {
 
     @GetMapping("/")
     public String home() {
-        return "index"; // This should display the login option
+        return "index.html";
     }
 
     @GetMapping("/post-login-url")
     public String postLogin() {
-        return "post-login";
+        return "post-login.html";
     }
 
     @GetMapping("/ldap-login")
     public String ldapLoginPage() {
-        return "ldap-login"; // returns the ldap-login.html Thymeleaf template
+        return "ldap-login.html";
+    }
+
+    @GetMapping("/saml/demo")
+    public String demoHome() {
+        return "saml-login.html";
     }
 }

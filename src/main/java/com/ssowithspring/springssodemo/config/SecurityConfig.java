@@ -4,16 +4,13 @@ import com.ssowithspring.springssodemo.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
-import org.springframework.security.ldap.DefaultSpringSecurityContextSource;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
-import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
 import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 @Configuration
@@ -39,18 +36,22 @@ public class SecurityConfig {
                 .passwordAttribute("userPassword");
     }
 
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http
-                .csrf(csrf -> csrf.disable()) // Disable CSRF for testing
-                .authorizeHttpRequests(authz -> authz
-                        .requestMatchers("/","/ldap-login", "/perform-login", "/oauth2/authorization/**").permitAll() // Permit these without authentication
-                        .anyRequest().authenticated()) // Other requests require authentication
+        http    .csrf(csrf->csrf.disable())
+                .authorizeHttpRequests((authz) -> authz
+                        .requestMatchers("/saml/**").permitAll()
+                        .anyRequest().authenticated()
+                )
+                .saml2Login(Customizer.withDefaults())
                 .formLogin(form -> form
-                        .loginPage("/ldap-login") // Use the custom login page
-                        .loginProcessingUrl("/perform-login") // Custom processing URL
-                        .defaultSuccessUrl("/post-login-url",true) // Redirect after successful login
-                        .permitAll()) // Allow access to everyone for the login page
+                        .loginPage("/ldap-login")
+                        .loginProcessingUrl("/perform-login")
+                        .defaultSuccessUrl("/post-login-url", true)
+                        .permitAll()
+                )
+                .saml2Logout(Customizer.withDefaults())
                 .oauth2Login(oauth2 -> oauth2
                         .userInfoEndpoint(userInfoEndpointConfig -> userInfoEndpointConfig
                                 .oidcUserService(this.userService))
@@ -64,4 +65,5 @@ public class SecurityConfig {
         successHandler.setDefaultTargetUrl("/post-login-url");
         return successHandler;
     }
+
 }
