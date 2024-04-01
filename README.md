@@ -15,26 +15,74 @@ This project demonstrates the integration of multiple Single Sign-On (SSO) authe
 - Maven 3.2+.
 - An IDE of your choice (IntelliJ IDEA, Eclipse, etc.).
 
-## Setup and Configuration
+### 1. Project Overview
 
-### OAuth2 and OIDC Providers
+This project aims to demonstrate the implementation of Single Sign-On (SSO) functionality using Spring Boot. It showcases integration with various authentication providers such as OAuth2 (Google, GitHub, Facebook, Azure AD) and LDAP for user authentication.
 
-To configure OAuth2 and OIDC providers (Google, GitHub, Facebook, Azure AD), follow these steps:
+### 2. Configuration
 
-1. Register your application with each provider to obtain client IDs and client secrets.
-2. Update `src/main/resources/application.yml` (or `application.properties`) with your OAuth2 and OIDC configuration details, including client IDs, client secrets, and redirect URIs.
+The project's configuration is managed primarily through the `application.properties` (or `application.yaml`) file. Here, you can set up the datasource configuration for connecting to the MySQL database, configure Hibernate properties for entity management, define the server port, and specify OAuth2 client registration details for each provider.
 
-### LDAP Configuration
+### 3. Controllers
 
-The LDAP configuration uses an embedded LDAP server populated from an LDIF file located at `src/main/resources/users.ldif`.
+### UserController:
+This controller defines mappings for different authentication endpoints and login pages. It includes endpoints for displaying the home page, post-login page, LDAP login page, and SAML login page.
 
-### SAML Configuration
+### 4. Entities
 
-SAML configuration requires setting up an identity provider (IdP). For testing purposes, you can use a service like [SSO Circle](http://www.ssocircle.com/) or set up your own IdP with tools like [Keycloak](https://www.keycloak.org/).
+### UserEntity:
+This entity represents a user in the system, containing basic attributes such as id, name, email, and provider. It serves as the model for user data storage in the database.
 
-Update the SAML configuration in `src/main/resources/application.yml` with details from your IdP, including entity IDs and key store information.
+### 5. Services
 
-## Running the Application
+#### CustomOAuth2UserService:
+This service class extends `DefaultOAuth2UserService` to customize user details retrieval from OAuth2 providers. It processes OAuth2 user information and saves or updates user details in the database based on the OAuth2 provider.
 
-To run the application, execute:
+#### UserService:
+This service implements `OAuth2UserService` to handle loading user details from the OAuth2 provider, specifically for Google authentication. It retrieves user attributes such as email and name and saves or updates user information in the database.
 
+### 6. Security Configuration
+
+#### SecurityConfig:
+This configuration class manages security settings for the application. It includes LDAP authentication configuration, OAuth2 login configuration for Google, GitHub, and Facebook, form-based login configuration, CSRF protection, and SAML configuration for Okta integration.
+
+### 7. Database Configuration <a name="database-configuration"></a>
+
+The project is configured to use MySQL as the database. The `application.properties` file includes properties for setting up the MySQL datasource, including the URL, username, password, and Hibernate properties for schema generation and management.
+
+### 8. OAuth2 Provider Configuration
+
+The `application.properties` file includes configurations for OAuth2 client registration with Google, GitHub, and Facebook. These configurations include client IDs, client secrets, and scopes required for authentication and user authorization.
+
+### 9. LDAP Configuration
+
+LDAP authentication is configured for the application using an embedded LDAP server for testing purposes. The configuration includes base DN, LDIF file location for defining user entries, port number, and credentials for the embedded LDAP server.
+
+### 10. SAML Configuration
+
+SAML configuration is set up for integration with Okta as the relying party. The configuration includes metadata URI for Okta, signing credentials for SAML assertions, and single logout settings for handling logout requests.
+
+---
+## CURLs For the SSO Applicaion
+
+#### 1. **Home Page (GET "/")**:
+```bash
+curl -X GET http://localhost:8080/
+```
+
+#### 2. **Post-Login Page (GET "/post-login-url")**:
+```bash
+curl -X GET http://localhost:8080/post-login-url
+```
+
+#### 3. **LDAP Login Page (GET "/ldap-login")**:
+```bash
+curl -X GET http://localhost:8080/ldap-login
+```
+
+#### 4. **SAML Login Page (GET "/saml/demo")**:
+```bash
+curl -X GET http://localhost:8080/saml/demo
+```
+
+You can run these `curl` commands in your terminal to make requests to the corresponding endpoints of your Spring Boot application. Make sure to replace `http://localhost:8080/` with the appropriate base URL of your application if it's different.
