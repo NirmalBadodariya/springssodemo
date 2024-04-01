@@ -15,6 +15,12 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     @Autowired
     private UserRepository userRepository;
 
+    /**
+     *
+     * @param userRequest
+     * @return Override the method to customize user details retrieval from OAuth2 providers
+     * @throws OAuth2AuthenticationException
+     */
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
         OAuth2User oauth2User = super.loadUser(userRequest);
@@ -25,7 +31,12 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         return oauth2User;
     }
 
-
+    /**
+     *
+     * @param registrationId
+     * @param oauth2User
+     * Method to process and save/update user details based on the OAuth2 provider
+     */
     private void processOAuth2User(String registrationId, OAuth2User oauth2User) {
         if ("github".equals(registrationId)) {
             String githubUsername = oauth2User.getAttribute("login");
@@ -47,6 +58,13 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         }
     }
 
+    /**
+     *
+     * @param username
+     * @param email
+     * @param provider
+     * Method to save or update user details in the database
+     */
     private void saveOrUpdateUser(String username, String email, String provider) {
         UserEntity user = userRepository.findByEmail(email);
         if (user == null) {

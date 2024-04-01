@@ -21,6 +21,12 @@ public class UserService implements OAuth2UserService<OidcUserRequest, OidcUser>
     private UserRepository userRepository;
 
 
+    /**
+     *
+     * @param userRequest
+     * @return Override method to load user details from OAuth2 provider.
+     * @throws OAuth2AuthenticationException
+     */
     @Override
     public OidcUser loadUser(OidcUserRequest userRequest) throws OAuth2AuthenticationException {
 

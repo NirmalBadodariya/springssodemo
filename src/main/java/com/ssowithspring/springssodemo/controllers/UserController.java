@@ -23,11 +23,11 @@ public class UserController {
     }
 
     @GetMapping("/developers")
-    public String devLogin(){
+    public String devLogin() {
         return "developers";
     }
     @GetMapping("/admins")
-    public String adminLogin(){
+    public String adminLogin() {
         return "admin";
     }
 

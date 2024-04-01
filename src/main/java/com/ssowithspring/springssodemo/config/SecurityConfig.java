@@ -36,8 +36,11 @@ public class SecurityConfig {
     @Autowired
     UserService userService;
 
-    // LDAP Config, Change as per your LDAP server
-    // Here We've Used In memory LDAP DB
+    /**
+     * LDAP Config, Change as per your LDAP server Here We've Used In memory LDAP DB
+     * @param auth
+     * @throws Exception
+     */
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
         SimpleAuthorityMapper authorityMapper = new SimpleAuthorityMapper();
@@ -55,8 +58,6 @@ public class SecurityConfig {
                 .and()
                 .authoritiesMapper(authorityMapper); // Directly use the configured mapper
     }
-
-
 
 
     @Bean
@@ -90,6 +91,12 @@ public class SecurityConfig {
     }
 
 
+    /**
+     *
+     * @param http
+     * @return Bean to define the security filter chain
+     * @throws Exception
+     */
     @Bean
     public SecurityFilterChain commonFilterChain(HttpSecurity http) throws Exception {
         http
@@ -101,7 +108,7 @@ public class SecurityConfig {
                         .invalidateHttpSession(true) // Invalidates the session
                 )
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/ldap-login/**", "/oauth2/authorization/**", "/login", "/login?logout").permitAll() // Allow access to login and logout pages without authentication
+                        .requestMatchers("/ldap-login/**", "/oauth2/authorization/**", "/login", "/login?logout","/saml/**").permitAll() // Allow access to login and logout pages without authentication
                             .anyRequest().permitAll())
                 .saml2Login(Customizer.withDefaults())
                 .formLogin(form -> form
@@ -120,6 +127,10 @@ public class SecurityConfig {
         return http.build();
     }
 
+    /**
+     *
+     * @return Bean to define custom authentication success handler
+     */
     @Bean
     public AuthenticationSuccessHandler myAuthenticationSuccessHandler() {
         SavedRequestAwareAuthenticationSuccessHandler successHandler = new SavedRequestAwareAuthenticationSuccessHandler();
