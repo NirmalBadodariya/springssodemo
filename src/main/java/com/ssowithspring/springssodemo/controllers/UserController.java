@@ -30,4 +30,9 @@ public class UserController {
     public String adminLogin(){
         return "admin";
     }
+
+    @GetMapping("/saml/demo")
+    public String demoHome() {
+        return "saml-login.html";
+    }
 }

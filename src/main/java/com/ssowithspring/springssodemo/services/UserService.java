@@ -16,7 +16,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class UserService implements OAuth2UserService<OidcUserRequest, OidcUser> {
-
+    
     @Autowired
     private UserRepository userRepository;
 

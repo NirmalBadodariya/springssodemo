@@ -7,6 +7,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.Customizer;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -21,6 +23,7 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
+import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 
 import java.io.IOException;
@@ -100,11 +103,13 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/ldap-login/**", "/oauth2/authorization/**", "/login", "/login?logout").permitAll() // Allow access to login and logout pages without authentication
                             .anyRequest().permitAll())
+                .saml2Login(Customizer.withDefaults())
                 .formLogin(form -> form
                         .loginPage("/ldap-login")
                         .loginProcessingUrl("/perform-ldap-login")
                         .successHandler(successHandler())
                         .permitAll())
+                .saml2Logout(Customizer.withDefaults())
                 .csrf(csrf -> csrf.disable())
                 .oauth2Login(oauth2 -> oauth2
                 .loginPage("/oauth2/authorization/**")
@@ -113,6 +118,13 @@ public class SecurityConfig {
                 .successHandler(successHandler())); // Handle OAuth2 login success
 
         return http.build();
+    }
+
+    @Bean
+    public AuthenticationSuccessHandler myAuthenticationSuccessHandler() {
+        SavedRequestAwareAuthenticationSuccessHandler successHandler = new SavedRequestAwareAuthenticationSuccessHandler();
+        successHandler.setDefaultTargetUrl("/post-login-url");
+        return successHandler;
     }
 
 }
